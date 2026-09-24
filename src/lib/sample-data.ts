@@ -1,34 +1,21 @@
+import { dateKey, sofiaStartOfDay } from "./format";
 import type { Alert, Author, Post, VillageEvent } from "./types";
 
 // Примерни данни — показват се, докато не е свързана базата в Supabase.
 // Същите са и в supabase/seed.sql.
 
-const MAYOR: Author = { full_name: null, organization: "Кметство Рибново", role: "verified" };
-const SCHOOL: Author = { full_name: null, organization: "Училището", role: "verified" };
-const RESIDENT: Author = { full_name: "Ахмед К.", organization: null, role: "resident" };
+const MAYOR: Author = { id: "u1", full_name: null, organization: "Кметство Рибново", role: "verified", avatar_url: null };
+const SCHOOL: Author = { id: "u2", full_name: null, organization: "Училището", role: "verified", avatar_url: null };
+const RESIDENT: Author = { id: "u3", full_name: "Ахмед К.", organization: null, role: "resident", avatar_url: null };
 
 const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 
-// Полунощ днес по българско време
-function sofiaMidnight(now: Date) {
-  const day = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Sofia" }).format(now);
-  const utcMidnight = new Date(`${day}T00:00:00Z`);
-  const sofiaHourAtUtcMidnight = Number(
-    new Intl.DateTimeFormat("en-GB", {
-      timeZone: "Europe/Sofia",
-      hour: "numeric",
-      hourCycle: "h23",
-    }).format(utcMidnight),
-  );
-  return new Date(utcMidnight.getTime() - sofiaHourAtUtcMidnight * HOUR);
-}
-
 export function sampleData(now = new Date()) {
   const ago = (ms: number) => new Date(now.getTime() - ms).toISOString();
   const later = (ms: number) => new Date(now.getTime() + ms).toISOString();
-  const midnight = sofiaMidnight(now).getTime();
+  const midnight = sofiaStartOfDay(dateKey(now)).getTime();
   const at = (days: number, hour: number) =>
     new Date(midnight + days * DAY + hour * HOUR).toISOString();
 
@@ -42,6 +29,7 @@ export function sampleData(now = new Date()) {
       expected_until: later(4 * HOUR),
       resolved_at: null,
       created_at: ago(40 * MINUTE),
+      author_id: MAYOR.id,
       author: MAYOR,
     },
     {
@@ -53,6 +41,7 @@ export function sampleData(now = new Date()) {
       expected_until: null,
       resolved_at: null,
       created_at: ago(3 * HOUR),
+      author_id: MAYOR.id,
       author: MAYOR,
     },
     {
@@ -64,6 +53,7 @@ export function sampleData(now = new Date()) {
       expected_until: null,
       resolved_at: ago(DAY),
       created_at: ago(DAY + 6 * HOUR),
+      author_id: MAYOR.id,
       author: MAYOR,
     },
   ];
@@ -77,6 +67,11 @@ export function sampleData(now = new Date()) {
       starts_at: at(2, 11),
       ends_at: at(2, 18),
       category: "events",
+      image_url: null,
+      status: "approved",
+      created_at: ago(DAY),
+      author_id: MAYOR.id,
+      author: MAYOR,
     },
     {
       id: "e2",
@@ -86,6 +81,11 @@ export function sampleData(now = new Date()) {
       starts_at: at(3, 17),
       ends_at: null,
       category: "events",
+      image_url: null,
+      status: "approved",
+      created_at: ago(DAY),
+      author_id: MAYOR.id,
+      author: MAYOR,
     },
     {
       id: "e3",
@@ -95,6 +95,11 @@ export function sampleData(now = new Date()) {
       starts_at: at(4, 12),
       ends_at: null,
       category: "memorial",
+      image_url: null,
+      status: "approved",
+      created_at: ago(DAY),
+      author_id: RESIDENT.id,
+      author: RESIDENT,
     },
     {
       id: "e4",
@@ -104,6 +109,11 @@ export function sampleData(now = new Date()) {
       starts_at: at(6, 16),
       ends_at: null,
       category: "events",
+      image_url: null,
+      status: "approved",
+      created_at: ago(DAY),
+      author_id: MAYOR.id,
+      author: MAYOR,
     },
     {
       id: "e5",
@@ -113,6 +123,11 @@ export function sampleData(now = new Date()) {
       starts_at: at(9, 10),
       ends_at: null,
       category: "events",
+      image_url: null,
+      status: "approved",
+      created_at: ago(DAY),
+      author_id: MAYOR.id,
+      author: MAYOR,
     },
   ];
 
@@ -123,7 +138,12 @@ export function sampleData(now = new Date()) {
       title: "Започва ремонтът на улицата към училището",
       body: "От понеделник започва полагането на нов асфалт. Движението ще бъде ограничено за около две седмици.",
       image_url: null,
+      status: "approved",
       published_at: ago(2 * HOUR),
+      created_at: ago(2 * HOUR),
+      like_count: 12,
+      comment_count: 3,
+      author_id: MAYOR.id,
       author: MAYOR,
     },
     {
@@ -132,7 +152,12 @@ export function sampleData(now = new Date()) {
       title: "Читалището набира деца за фолклорния състав",
       body: "Записванията са всеки делничен ден от 16 до 18 часа в читалището. Възраст от 7 до 14 години.",
       image_url: null,
+      status: "approved",
       published_at: ago(DAY),
+      created_at: ago(DAY),
+      like_count: 8,
+      comment_count: 1,
+      author_id: SCHOOL.id,
       author: SCHOOL,
     },
     {
@@ -141,7 +166,12 @@ export function sampleData(now = new Date()) {
       title: "Продавам дърва за огрев",
       body: "Бук и дъб, нарязани и нацепени. Доставка в рамките на селото. Тел. 0888 000 000.",
       image_url: null,
+      status: "approved",
       published_at: ago(2 * DAY),
+      created_at: ago(2 * DAY),
+      like_count: 2,
+      comment_count: 0,
+      author_id: RESIDENT.id,
       author: RESIDENT,
     },
     {
@@ -150,7 +180,12 @@ export function sampleData(now = new Date()) {
       title: "Благодарност към доброволците",
       body: "Благодарим на всички, които помогнаха за почистването на реката в събота!",
       image_url: null,
+      status: "approved",
       published_at: ago(4 * DAY),
+      created_at: ago(4 * DAY),
+      like_count: 21,
+      comment_count: 5,
+      author_id: RESIDENT.id,
       author: RESIDENT,
     },
   ];

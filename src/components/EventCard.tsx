@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { dayLabel, dayNumber, monthShort, time } from "@/lib/format";
 import type { VillageEvent } from "@/lib/types";
@@ -6,7 +7,10 @@ import type { VillageEvent } from "@/lib/types";
 export function EventCard({ event }: { event: VillageEvent }) {
   const memorial = event.category === "memorial";
   return (
-    <article className="flex w-[230px] shrink-0 snap-start flex-col rounded-3xl border border-line bg-paper p-4">
+    <Link
+      href={`/sabitiya/${event.id}`}
+      className="flex w-[230px] shrink-0 snap-start flex-col rounded-3xl border border-line bg-paper p-4"
+    >
       <div className="flex items-center gap-3">
         <div
           className={`grid h-14 w-12 shrink-0 place-content-center rounded-2xl text-center ${
@@ -34,6 +38,6 @@ export function EventCard({ event }: { event: VillageEvent }) {
           <span className="truncate">{event.location}</span>
         </p>
       )}
-    </article>
+    </Link>
   );
 }

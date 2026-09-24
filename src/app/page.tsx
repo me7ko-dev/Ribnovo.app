@@ -2,8 +2,10 @@ import Link from "next/link";
 import { Bell, ChevronRight, Sun } from "lucide-react";
 import { AlertBanner } from "@/components/AlertBanner";
 import { EventCard } from "@/components/EventCard";
-import { NewsCard } from "@/components/NewsCard";
+import { InstallPrompt } from "@/components/InstallPrompt";
+import { PostCard } from "@/components/PostCard";
 import { SectionHeader } from "@/components/SectionHeader";
+import { getMe } from "@/lib/auth";
 import { getHomeData } from "@/lib/data";
 import { todayLong } from "@/lib/format";
 
@@ -12,7 +14,7 @@ function alertsWord(n: number) {
 }
 
 export default async function HomePage() {
-  const { topAlert, otherActiveAlerts, upcomingEvents, news, source } = await getHomeData();
+  const [{ topAlert, otherActiveAlerts, upcomingEvents, news, source }, me] = await Promise.all([getHomeData(), getMe()]);
   const activeCount = otherActiveAlerts + (topAlert ? 1 : 0);
 
   return (
@@ -35,6 +37,8 @@ export default async function HomePage() {
           )}
         </Link>
       </header>
+
+      <InstallPrompt />
 
       {source !== "supabase" && (
         <p className="mx-4 mb-4 rounded-2xl border border-dashed border-muted/40 px-4 py-2.5 text-xs text-muted">
@@ -87,12 +91,15 @@ export default async function HomePage() {
 
       {/* 3. Новини */}
       <section aria-label="Новини" className="mt-8">
-        <SectionHeader title="Новини" />
+        <SectionHeader title="Новини" href="/novini" linkLabel="Всички" />
         {news.length > 0 ? (
           <div className="mt-3 space-y-3 px-4">
             {news.map((post) => (
-              <NewsCard key={post.id} post={post} />
+              <PostCard key={post.id} post={post} signedIn={Boolean(me)} />
             ))}
+            <Link href="/novini" className="btn-secondary w-full">
+              Още новини
+            </Link>
           </div>
         ) : (
           <p className="mt-3 px-4 text-sm text-muted">Все още няма новини.</p>

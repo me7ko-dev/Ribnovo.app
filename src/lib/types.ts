@@ -1,20 +1,21 @@
-// Типове данни — отговарят на таблиците в supabase/migrations/0001_init.sql
+// Типове данни — отговарят на таблиците в supabase/migrations/
 
-export type AlertCategory =
-  | "emergency"
-  | "utilities"
-  | "road"
-  | "events"
-  | "memorial"
-  | "ads";
+export type AlertCategory = "emergency" | "utilities" | "road" | "events" | "memorial" | "ads";
 
 export type UserRole = "admin" | "verified" | "resident";
 
-export type Author = {
+export type ModerationStatus = "pending" | "approved" | "rejected";
+
+export type Profile = {
+  id: string;
   full_name: string | null;
   organization: string | null;
   role: UserRole;
+  avatar_url: string | null;
 };
+
+// Авторът, както се показва до публикация
+export type Author = Profile;
 
 export type Alert = {
   id: string;
@@ -25,6 +26,7 @@ export type Alert = {
   expected_until: string | null;
   resolved_at: string | null;
   created_at: string;
+  author_id: string | null;
   author: Author | null;
 };
 
@@ -36,6 +38,11 @@ export type VillageEvent = {
   starts_at: string;
   ends_at: string | null;
   category: AlertCategory;
+  image_url: string | null;
+  status: ModerationStatus;
+  created_at: string;
+  author_id: string | null;
+  author: Author | null;
 };
 
 export type Post = {
@@ -44,6 +51,24 @@ export type Post = {
   title: string;
   body: string;
   image_url: string | null;
-  published_at: string;
+  status: ModerationStatus;
+  published_at: string | null;
+  created_at: string;
+  like_count: number;
+  comment_count: number;
+  author_id: string | null;
+  author: Author | null;
+  liked_by_me?: boolean;
+};
+
+export type Comment = {
+  id: string;
+  post_id: string;
+  body: string;
+  created_at: string;
+  author_id: string;
   author: Author | null;
 };
+
+// Резултат от формуляр (показва грешка или съобщение)
+export type FormState = { error?: string; ok?: string } | undefined;

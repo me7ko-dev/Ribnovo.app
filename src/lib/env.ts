@@ -1,0 +1,9 @@
+// Настройки от .env.local / Vercel → Settings → Environment Variables
+
+export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+export const SUPABASE_KEY =
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
+export const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "";
+
+// Свързана ли е базата данни
+export const hasSupabase = Boolean(SUPABASE_URL && SUPABASE_KEY);
