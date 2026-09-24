@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+/* Цветовете и шрифтовете на Рибново */
+@theme {
+  --color-cream: #f3efe6;   /* топъл светъл фон */
+  --color-paper: #fbf9f4;   /* карти */
+  --color-line: #e3dccd;    /* рамки */
+  --color-ink: #1e1c17;     /* основен текст */
+  --color-muted: #6b6456;   /* второстепенен текст */
+  --color-forest: #1f4d3a;  /* тъмнозелен акцент */
+  --color-forest-soft: #e2eae3;
+  --color-alarm: #b4410f;   /* оранжево за аларми */
+  --color-alarm-soft: #f5e2d5;
+}
+
+@theme inline {
+  --font-serif: var(--font-lora), Georgia, serif;
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
+}
+
+html {
+  color-scheme: light;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
